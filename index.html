@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Art of Noise Exhibition Sound app</title>
+
+  <!-- Preload the default SVG so per-letter textures spin up faster -->
+  <link rel="preload" as="image" href="Art of Noise.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Menu toggle: text icon kept (✕ / ☰) so it can’t “disappear” -->
+  <button id="menuToggle" class="menu-toggle" aria-label="Close menu" data-state="open">✕</button>
+
+  <div class="layout" id="layout">
+    <aside class="panel" id="panel" aria-label="Control panel">
+      <div class="brand-block">
+        <h1 class="brand">ART OF<br>NOISE</h1>
+      </div>
+
+      <section class="group">
+        <div class="group__title">Content</div>
+        <div class="group__inner">
+          <div class="field">
+            <!-- turned the static label into a proper dropdown -->
+            <select class="select btn" id="contentSelect">
+              <option value="Art of Noise.svg" selected>Art of Noise</option>
+              <option value="Devon Turnbull.svg">Devon Turnbull</option>
+              <option value="Teenage Engineering.svg">Teenage Engineering</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <div class="group__title">Background</div>
+        <div class="group__inner">
+          <div class="controls-row cols-2">
+            <button id="bgBlack" class="btn is-active">Black</button>
+            <button id="bgBlue"  class="btn">Blue</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <div class="group__title">Audio</div>
+        <div class="group__inner">
+          <div class="file-row">
+            <label class="file btn">
+              <input id="file" type="file" accept="audio/*" />
+              <span>Choose File</span>
+            </label>
+            <div class="file__name" id="fileName">No file...</div>
+          </div>
+
+          <div class="controls-row cols-3">
+            <button id="playBtn"          class="btn is-icon" disabled title="Play">▶︎</button>
+            <button id="pauseBtn"         class="btn is-icon" disabled title="Pause">⏸</button>
+            <button id="stopPlaybackBtn"  class="btn is-icon" disabled title="Stop">⏹</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <div class="group__title">Microphone</div>
+        <div class="group__inner">
+          <div class="controls-row cols-2">
+            <button id="startBtn" class="btn">Start Mic</button>
+            <button id="stopBtn"  class="btn" disabled>Stop Mic</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <div class="group__title">Controls</div>
+        <div class="group__inner">
+          <div class="slider">
+            <div class="slider__row">
+              <input id="audioSensitivity" type="range" min="0" max="100" step="10" value="0" list="ticks-0-100" />
+            </div>
+            <div class="slider__labels">
+              <span>Audio Sensitivity</span><span id="audioBadge">0%</span>
+            </div>
+          </div>
+
+          <div class="slider">
+            <div class="slider__row">
+              <input id="ripplesResponse" type="range" min="0" max="100" step="10" value="50" list="ticks-0-100" />
+            </div>
+            <div class="slider__labels">
+              <span>Ripples Response</span><span id="respBadge">50%</span>
+            </div>
+          </div>
+
+          <div class="slider">
+            <div class="slider__row">
+              <input id="ripplesQuantity" type="range" min="0" max="100" step="10" value="50" list="ticks-0-100" />
+            </div>
+            <div class="slider__labels">
+              <span>Ripples Quantity</span><span id="qtyBadge">50%</span>
+            </div>
+          </div>
+
+          <div class="controls-row cols-1">
+            <button id="resetBtn" class="btn" disabled>Reset</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <div class="group__title">Export</div>
+        <div class="group__inner">
+          <div class="controls-row cols-3">
+            <button class="btn" disabled>PNG</button>
+            <button class="btn" disabled>JPG</button>
+            <button class="btn" disabled>SVG</button>
+          </div>
+        </div>
+      </section>
+          
+      
+      <div class="menu-logo">
+      <img src="Associate.svg" alt="Associate Studio Logo">
+    </div>
+      
+    </aside>
+    
+
+    <main class="stage">
+      <canvas id="gl"></canvas>
+    </main>
+  </div>
+
+  
+  
+
+  <datalist id="ticks-0-100">
+    <option value="0"></option><option value="10"></option><option value="20"></option>
+    <option value="30"></option><option value="40"></option><option value="50"></option>
+    <option value="60"></option><option value="70"></option><option value="80"></option>
+    <option value="90"></option><option value="100"></option>
+  </datalist>
+
+  
+
+  <script src="script.js"></script>
+</body>
+</html>

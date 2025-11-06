@@ -1,0 +1,377 @@
+/* ===== Tokens ===== */
+:root{
+  --panel-w: 360px;
+  --panel-margin-y: 12px;
+  --panel-padding-x: 16px;
+  --panel-inner-x: 8px;
+
+  --app-bg: #000;         
+  --ink: #fff;
+  --ink-dim: rgba(255,255,255,.62);
+
+  --line: rgba(255,255,255,.36);
+  --line-strong: rgba(255,255,255,.52);
+
+  --radius-outer: 28px;
+  --radius-pill: 999px;
+
+  --btn-h: 40px;
+  --btn-pad-x: 16px;
+  --btn-stroke: 2px;
+
+  --label-size: 12px;
+  --title-size: 44px;
+  --gap: 12px;
+}
+
+*{ box-sizing:border-box }
+html,body{ height:100% }
+body{
+  margin:0; background:var(--app-bg); color:var(--ink);
+  font:14px/1.3 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+}
+
+/* ===== Layout ===== */
+.layout{ display:grid; grid-template-columns:var(--panel-w) 1fr; grid-template-rows:100vh; }
+.layout.layout--panel-closed{ grid-template-columns:0 1fr; }
+
+.stage{ display:grid; place-items:center; overflow:hidden; position:relative }
+#gl{ display:block; width:min(92%,1600px); height:clamp(420px,66vh,900px); background:transparent; }
+
+/* ===== Panel ===== */
+.panel{
+  height:calc(100vh - (var(--panel-margin-y)*2));
+  margin:var(--panel-margin-y) 0 var(--panel-margin-y) var(--panel-margin-y);
+  padding:0 var(--panel-padding-x);
+  border:var(--btn-stroke) solid var(--ink);
+  border-radius:var(--radius-outer);
+  background:transparent;
+  display:flex; flex-direction:column;
+  overflow:hidden; position:relative; z-index:40;
+  transform:translateX(0); transition:transform .35s ease;
+}
+.panel--closed{ transform:translateX(calc(-100% - var(--panel-margin-y))); }
+
+/* ===== Menu toggle (FIXED CENTERING) ===== */
+.menu-toggle{
+  position:fixed; 
+  top:var(--panel-margin-y);
+  left:calc(var(--panel-w) + var(--panel-margin-y));
+  z-index:50; 
+  width:44px; height:44px;
+
+  /* Center icon always */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border:var(--btn-stroke) solid var(--ink);
+  background:transparent; 
+  color:var(--ink);
+  border-radius:50%;
+  cursor:pointer;
+
+  font-size:22px;
+  line-height:1;
+  padding:0; /* remove baseline interference */
+
+  transition:background .2s, color .2s, border-color .2s, left .35s ease;
+}
+
+/* Closed state (NO padding hack now) */
+.menu-toggle[data-state="closed"]{
+  left:var(--panel-margin-y);
+  padding:0;
+}
+
+.menu-toggle:hover{
+  background:#fff; 
+  color:#000; 
+  border-color:#fff;
+}
+
+/* ===== Brand / Groups ===== */
+.brand-block{
+  margin-inline: var(--panel-inner-x);
+  padding:18px 0;
+  border-bottom: var(--btn-stroke) solid var(--line-strong);
+}
+.brand{ 
+  margin:0; 
+  font-weight:800; 
+  font-size:var(--title-size); 
+  line-height:.88; 
+  letter-spacing:.2px;
+}
+
+/* Short aligned dividers */
+.group{
+  padding:16px 0 18px;
+  margin-inline:var(--panel-inner-x);
+  border-bottom:var(--btn-stroke) solid var(--line);
+}
+.group:last-of-type{
+  border-bottom:var(--btn-stroke) solid var(--line-strong);
+}
+
+.group__title{
+  font-size:var(--label-size);
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin:0 0 12px;
+  padding:0;
+}
+
+.group__inner{ padding:0; }
+.field{ display:flex; gap:10px }
+
+/* ===== Buttons ===== */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  height:var(--btn-h); padding:0 var(--btn-pad-x);
+  background:transparent; color:var(--ink);
+  border:var(--btn-stroke) solid var(--ink); border-radius:var(--radius-pill);
+  cursor:pointer; 
+  transition:background .2s, color .2s, border-color .2s, box-shadow .2s;
+  text-align:center; white-space:nowrap;
+}
+
+/* Hover outline */
+.btn:hover:not(:disabled):not(.is-active){
+  background:transparent;
+  color:var(--ink);
+  border-color:var(--ink);
+  box-shadow:0 0 0 2px var(--ink);
+}
+
+/* Active */
+.btn.is-active{
+  background:#fff !important;
+  border-color:#fff !important;
+  color:var(--app-bg) !important;
+  opacity:1 !important;
+  cursor:default !important;
+  box-shadow:none !important;
+}
+.btn.is-active:disabled{ opacity:1 !important; cursor:default !important; }
+
+/* Disabled default */
+.btn:disabled{ opacity:.4; cursor:not-allowed; }
+
+/* ===== File Row ===== */
+.file-row{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px; margin-bottom:var(--gap);
+}
+.file{ position:relative; width:50%; }
+.file input{ position:absolute; inset:0; opacity:0; cursor:pointer; }
+
+.file-row .btn{
+  width:50%; height:var(--btn-h);
+}
+
+.file__name{
+  width:50%; 
+  font-size:12px; 
+  color:var(--ink-dim);
+  text-align:left;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* ===== Controls ===== */
+.controls-row{ width:100%; display:grid; gap:var(--gap); margin-top:var(--gap); }
+.controls-row.cols-1{ grid-template-columns:1fr; }
+.controls-row.cols-2{ grid-template-columns:repeat(2,1fr); }
+.controls-row.cols-3{ grid-template-columns:repeat(3,1fr); }
+.btn.is-icon{ width:100%; min-width:auto; font-size:16px; }
+
+/* ===== Sliders ===== */
+.slider{ margin-top:4px; margin-bottom:6px; }
+.slider__row{ position:relative; padding:6px 0 2px; }
+.slider__row input[type="range"]{
+  width:100%; height:14px;
+  appearance:none; -webkit-appearance:none;
+  background:transparent; border:none; outline:none;
+}
+.slider__row input[type="range"]::-webkit-slider-runnable-track{
+  height:14px; background:linear-gradient(var(--ink),var(--ink)) center/100% 2px no-repeat;
+}
+.slider__row input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none;
+  width:14px; height:14px; border-radius:50%; background:var(--ink);
+  border:none; cursor:pointer;
+}
+.slider__labels{
+  display:flex; justify-content:space-between;
+  font-size:var(--label-size); margin-top:2px;
+}
+
+/* ===== Dropdown ===== */
+.select-wrap{ position:relative; width:100%; z-index:60; }
+.select--hidden{ position:absolute!important; inset:0; opacity:0; pointer-events:none; }
+
+.select-trigger{
+  width:100%; height:var(--btn-h);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 var(--btn-pad-x);
+  border:var(--btn-stroke) solid #fff;
+  border-radius:var(--radius-pill);
+  background:#fff;
+  color:var(--app-bg);
+  cursor:pointer;
+  font-size:14px; 
+  font-weight:400; 
+  letter-spacing:.01em;
+}
+.select-caret{
+  width:9px; height:9px;
+  border-right:2px solid currentColor; border-bottom:2px solid currentColor;
+  transform:rotate(45deg) translateY(-1px);
+}
+.select-trigger:hover{ box-shadow:0 0 0 2px var(--ink); }
+
+.select-menu{
+  position:absolute; top:calc(100% + 8px); left:0; width:100%;
+  max-height:220px; overflow:auto;
+  background:#fff;
+  border:2px solid #fff; 
+  border-radius:20px;
+  padding:6px; display:none;
+}
+.select-menu.is-open{ display:block; }
+
+.select-option{
+  position:relative;
+  display:flex; align-items:center; width:100%;
+  padding:10px 14px; margin:4px 0;
+  font-size:14px; 
+  font-weight:400;
+  border-radius:var(--radius-pill);
+  border:2px solid var(--app-bg);
+  color:var(--app-bg);
+  background:transparent;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  transition:background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+
+.select-option[aria-selected="true"]{
+  background:var(--app-bg);
+  color:#fff;
+  border-color:var(--app-bg);
+}
+
+.select-option:hover:not([aria-selected="true"]){
+  background:transparent;
+  color:var(--app-bg);
+  border-color:var(--app-bg);
+  box-shadow:inset 0 0 0 2px var(--app-bg);
+}
+
+.select-menu::-webkit-scrollbar{ width:10px; }
+.select-menu::-webkit-scrollbar-thumb{
+  background:rgba(0,0,0,.18); 
+  border-radius:10px; 
+  border:2px solid #fff;
+}
+
+/* ===== Responsive ===== */
+@media (max-width:900px){
+  :root{ --panel-w: 320px; }
+}
+
+/* ==== Menu vertical spacing normalization (tighter spacing) ==== */
+
+/* Section padding (top + bottom) — slightly tighter */
+.panel .group{
+  padding-block: 12px; /* was 16px */
+}
+
+/* Title spacing — slightly tighter */
+.panel .group__title{
+  margin: 0 0 8px; /* was var(--gap) = 12px */
+}
+
+/* Internal group spacing — affects labels, buttons, sliders */
+.panel .group__inner > * + *{
+  margin-top: 8px; /* was 12px */
+}
+
+/* Row spacing */
+.panel .controls-row{
+  gap: 8px;        /* was 12px */
+  margin-top: 8px; /* was 12px */
+}
+
+/* Spacing around the audio file row */
+.panel .file-row{
+  gap: 8px;               /* was 12px */
+  margin-bottom: 8px;     /* was 12px */
+}
+
+/* ==== SLIDERS — tighter vertical spacing between sliders ==== */
+
+/* Space above/below each slider block */
+.panel .slider{
+  margin: 8px 0; /* was 12px */
+}
+
+/* Slider internal row spacing */
+.panel .slider__row{
+  padding: 3px 0 0; /* was 4px/6px */
+}
+
+/* Low–High labels under sliders */
+.panel .slider__labels{
+  margin-top: 5px; /* was 6px */
+}
+
+/* === Pixel-perfect centering for burger/close icon inside the circular button === */
+/* Hide the raw button text so we can control the icon via ::before */
+.menu-toggle{
+  font-size: 0;            /* ignore original glyph metrics */
+  position: fixed;         /* keep your existing positioning behavior */
+}
+
+/* Default (menu OPEN => ✕) */
+.menu-toggle::before{
+  content: '✕';
+  display: block;
+  font-size: 22px;         /* icon size */
+  line-height: 1;          /* no extra vertical space */
+  /* parent .menu-toggle already uses flex + center in your CSS */
+  transform: translateY(-0.5px); /* optical vertical centering for ✕ */
+}
+
+/* Closed state (menu CLOSED => ☰) */
+.menu-toggle[data-state="closed"]::before{
+  content: '☰';
+  /* The burger sits optically low in most fonts — nudge it up a touch */
+  transform: translateY(-1px);
+}
+
+/* Force the X icon to sit lower (menu open state only) */
+.menu-toggle:not([data-state="closed"])::before {
+  content: '✕';
+  transform: translateY(1px) !important; /* ▼ nudges DOWN */
+}
+
+.menu-logo {
+  margin-top: auto;
+  padding: 0 0 24px 0;   /* your updated bottom spacing */
+  display: flex;
+  justify-content: center;
+}
+
+.menu-logo img,
+.menu-logo svg {
+  width: 296px;
+  height: auto;
+  display: block;
+  filter: none !important;       /* keep the logo’s native white */
+  opacity: 1 !important;
+}
